@@ -10,8 +10,10 @@ import CoreBluetooth
 import AppKit
 
 struct TransferService {
-    static let serviceUUID = CBUUID(string: "E20A39F4-73F5-4BC4-A12F-17D1AD07A961")
-    static let characteristicUUID = CBUUID(string: "08590F7E-DB05-467E-8757-72F6FAEB13D4")
+//    static let serviceUUID = CBUUID(string: "E20A39F4-73F5-4BC4-A12F-17D1AD07A961")
+//    static let characteristicUUID = CBUUID(string: "08590F7E-DB05-467E-8757-72F6FAEB13D4")
+    static let serviceUUID = CBUUID(string: "0000ec00-0000-1000-8000-00805f9b34fb")
+    static let characteristicUUID = CBUUID(string: "0000ec0e-0000-1000-8000-00805f9b34fb")
 }
 
 
@@ -59,7 +61,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         // Save the characteristic for later.
         self.transferCharacteristic = transferCharacteristic
         
-        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "My Peripheral", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
+        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "The damn mac app", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
     }
 
     
@@ -108,18 +110,6 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             }
 
     }
-
-    func peripheralManagerDidStartAdvertising(_ peripheral: CBPeripheralManager, error: NSError?)
-    {
-        print("Did start advertising")
-        if let error = error
-        {
-            print("Failed due to error: \(error)")
-            return
-        }
-        print("Success")
-    }
-    
     
     /*
      *  Sends the next amount of data to the connected central
@@ -248,6 +238,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             
             print("Received write request of %d bytes: %s", requestValue.count, stringFromData)
             print(stringFromData)
+            peripheralManager.respond(to: aRequest, withResult: .success)
         }
     }
 }

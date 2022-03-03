@@ -10,27 +10,18 @@ import CoreBluetooth
 import AppKit
 
 struct TransferService {
-//    static let serviceUUID = CBUUID(string: "E20A39F4-73F5-4BC4-A12F-17D1AD07A961")
-//    static let characteristicUUID = CBUUID(string: "08590F7E-DB05-467E-8757-72F6FAEB13D4")
-    static let serviceUUID = CBUUID(string: "0000ec00-0000-1000-8000-00805f9b34fb")
-    static let characteristicUUID = CBUUID(string: "0000ec0e-0000-1000-8000-00805f9b34fb")
+    static let serviceUUID = CBUUID(string: "1F2AD508-3BD6-485F-A2B1-F96ADBFB93E5")
+    static let characteristicUUID = CBUUID(string: "92DEFE82-F9D9-4BAC-AFAB-A82B4C202B0B")
 }
 
-
-print("1")
 class Peripheral: NSObject, CBPeripheralManagerDelegate
 {
     var peripheralManager : CBPeripheralManager!
     
     var transferCharacteristic: CBMutableCharacteristic?
-    var connectedCentral: CBCentral?
-    var dataToSend = Data()
-    var sendDataIndex: Int = 0
     
     override init(){
         super.init()
-//        super.init(delegate: self, queue: nil, options: [CBPeripheralManagerOptionShowPowerAlertKey: true])
-        print("1.75")
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: [CBPeripheralManagerOptionShowPowerAlertKey: true])
         if (peripheralManager.state == CBManagerState.poweredOn){
             print("Powered on")
@@ -45,7 +36,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         
         // Start with the CBMutableCharacteristic.
         let transferCharacteristic = CBMutableCharacteristic(type: TransferService.characteristicUUID,
-                                                         properties: [.notify, .writeWithoutResponse],
+                                                             properties: [.notify, .writeWithoutResponse, .write],
                                                          value: nil,
                                                          permissions: [.readable, .writeable])
         
@@ -61,7 +52,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         // Save the characteristic for later.
         self.transferCharacteristic = transferCharacteristic
         
-        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "The damn mac app", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
+        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "Quixel macMini app", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
     }
 
     
@@ -108,122 +99,6 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 // In a real app, you'd deal with yet unknown cases that might occur in the future
                 return
             }
-
-    }
-    
-    /*
-     *  Sends the next amount of data to the connected central
-     */
-    static var sendingEOM = false
-    
-    private func sendData() {
-        
-        guard let transferCharacteristic = transferCharacteristic else {
-            return
-        }
-        
-        // First up, check if we're meant to be sending an EOM
-        if Peripheral.sendingEOM {
-            // send it
-            let didSend = peripheralManager.updateValue("EOM".data(using: .utf8)!, for: transferCharacteristic, onSubscribedCentrals: nil)
-            // Did it send?
-            if didSend {
-                // It did, so mark it as sent
-                Peripheral.sendingEOM = false
-                print("Sent: EOM")
-            }
-            // It didn't send, so we'll exit and wait for peripheralManagerIsReadyToUpdateSubscribers to call sendData again
-            return
-        }
-        
-        // We're not sending an EOM, so we're sending data
-        // Is there any left to send?
-        if sendDataIndex >= dataToSend.count {
-            // No data left.  Do nothing
-            return
-        }
-        
-        // There's data left, so send until the callback fails, or we're done.
-        var didSend = true
-        while didSend {
-            
-            // Work out how big it should be
-            var amountToSend = dataToSend.count - sendDataIndex
-            if let mtu = connectedCentral?.maximumUpdateValueLength {
-                amountToSend = min(amountToSend, mtu)
-            }
-            
-            // Copy out the data we want
-            let chunk = dataToSend.subdata(in: sendDataIndex..<(sendDataIndex + amountToSend))
-            
-            // Send it
-            didSend = peripheralManager.updateValue(chunk, for: transferCharacteristic, onSubscribedCentrals: nil)
-            
-            // If it didn't work, drop out and wait for the callback
-            if !didSend {
-                return
-            }
-            
-            let stringFromData = String(data: chunk, encoding: .utf8)
-            print("Sent %d bytes: %s", chunk.count, String(describing: stringFromData))
-            
-            // It did send, so update our index
-            sendDataIndex += amountToSend
-            // Was it the last one?
-            if sendDataIndex >= dataToSend.count {
-                // It was - send an EOM
-                
-                // Set this so if the send fails, we'll send it next time
-                Peripheral.sendingEOM = true
-                
-                //Send it
-                let eomSent = peripheralManager.updateValue("EOM".data(using: .utf8)!,
-                                                             for: transferCharacteristic, onSubscribedCentrals: nil)
-                
-                if eomSent {
-                    // It sent; we're all done
-                    Peripheral.sendingEOM = false
-                    print("Sent: EOM")
-                }
-                return
-            }
-        }
-    }
-    
-    /*
-     *  Catch when someone subscribes to our characteristic, then start sending them data
-     */
-    func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didSubscribeTo characteristic: CBCharacteristic) {
-        print("Central subscribed to characteristic")
-        
-        // Get the data
-        dataToSend = "Hejsan tillbaka :D".data(using: .utf8)!
-        
-        // Reset the index
-        sendDataIndex = 0
-        
-        // save central
-        connectedCentral = central
-        
-        // Start sending
-        sendData()
-    }
-    
-    /*
-     *  Recognize when the central unsubscribes
-     */
-    func peripheralManager(_ peripheral: CBPeripheralManager, central: CBCentral, didUnsubscribeFrom characteristic: CBCharacteristic) {
-        print("Central unsubscribed from characteristic")
-        connectedCentral = nil
-    }
-    
-    /*
-     *  This callback comes in when the PeripheralManager is ready to send the next chunk of data.
-     *  This is to ensure that packets will arrive in the order they are sent
-     */
-    func peripheralManagerIsReady(toUpdateSubscribers peripheral: CBPeripheralManager) {
-        // Start sending again
-        sendData()
     }
     
     /*
@@ -239,6 +114,16 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             print("Received write request of %d bytes: %s", requestValue.count, stringFromData)
             print(stringFromData)
             peripheralManager.respond(to: aRequest, withResult: .success)
+        }
+    }
+    
+    func peripheralManager(_ peripheral: CBPeripheralManager,
+                             didAdd service: CBService,
+                             error: Error?) {
+        if (error != nil) {
+            print("Could not add service to peripheral")
+        } else {
+            print ("Successfully added service to peripheral. Ready to receive data")
         }
     }
 }

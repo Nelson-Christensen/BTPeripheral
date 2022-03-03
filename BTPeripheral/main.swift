@@ -11,7 +11,10 @@ import AppKit
 
 struct TransferService {
     static let serviceUUID = CBUUID(string: "1F2AD508-3BD6-485F-A2B1-F96ADBFB93E5")
-    static let characteristicUUID = CBUUID(string: "92DEFE82-F9D9-4BAC-AFAB-A82B4C202B0B")
+    // This is for passing changes in the assetId folder to save to
+    static let assetIDCharacteristicsUUID = CBUUID(string: "92DEFE82-F9D9-4BAC-AFAB-A82B4C202B0B")
+    // This is to send commands for the 2D scanner with the remote control functionality
+    static let commandsCharacteristicsUUID = CBUUID(string: "9AE32710-EB03-46CF-A9FB-D4F3536CCDF2")
 }
 
 class Peripheral: NSObject, CBPeripheralManagerDelegate
@@ -35,22 +38,27 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         print("Setting up peripheral")
         
         // Start with the CBMutableCharacteristic.
-        let transferCharacteristic = CBMutableCharacteristic(type: TransferService.characteristicUUID,
+        let assetIdCharacteristic = CBMutableCharacteristic(type: TransferService.assetIDCharacteristicsUUID,
                                                              properties: [.notify, .writeWithoutResponse, .write],
                                                          value: nil,
                                                          permissions: [.readable, .writeable])
+        
+        let commandCharacteristic = CBMutableCharacteristic(type: TransferService.commandsCharacteristicsUUID,
+                                                             properties: [.write],
+                                                         value: nil,
+                                                         permissions: [.writeable])
         
         // Create a service from the characteristic.
         let transferService = CBMutableService(type: TransferService.serviceUUID, primary: true)
         
         // Add the characteristic to the service.
-        transferService.characteristics = [transferCharacteristic]
+        transferService.characteristics = [assetIdCharacteristic, commandCharacteristic]
         
         // And add it to the peripheral manager.
         peripheralManager.add(transferService)
         
         // Save the characteristic for later.
-        self.transferCharacteristic = transferCharacteristic
+        self.transferCharacteristic = assetIdCharacteristic
         
         peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "Quixel macMini app", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
     }
@@ -111,9 +119,20 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                     continue
             }
             
-            print("Received write request of %d bytes: %s", requestValue.count, stringFromData)
-            print(stringFromData)
-            peripheralManager.respond(to: aRequest, withResult: .success)
+            switch aRequest.characteristic.uuid {
+            case TransferService.assetIDCharacteristicsUUID:
+                print("Attempting to change assetId to: ", stringFromData)
+                print(stringFromData)
+                peripheralManager.respond(to: aRequest, withResult: .success)
+            case TransferService.commandsCharacteristicsUUID:
+                print("Sent remote control command: ", stringFromData)
+                print(stringFromData)
+                peripheralManager.respond(to: aRequest, withResult: .success)
+            default:
+                print(stringFromData)
+                print("Message sent to unknown characteristic")
+                peripheralManager.respond(to: aRequest, withResult: .requestNotSupported)
+            }
         }
     }
     

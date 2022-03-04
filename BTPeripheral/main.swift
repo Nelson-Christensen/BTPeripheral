@@ -9,10 +9,15 @@ import Foundation
 import CoreBluetooth
 import AppKit
 
+
 struct TransferService {
     static let serviceUUID = CBUUID(string: "1F2AD508-3BD6-485F-A2B1-F96ADBFB93E5")
     static let characteristicUUID = CBUUID(string: "92DEFE82-F9D9-4BAC-AFAB-A82B4C202B0B")
 }
+
+var dirPathmaster = "/Users/tobiasforsen/Documents/folders/master"
+
+
 
 class Peripheral: NSObject, CBPeripheralManagerDelegate
 {
@@ -52,7 +57,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         // Save the characteristic for later.
         self.transferCharacteristic = transferCharacteristic
         
-        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "Quixel macMini app", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
+        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "QuixelmacMiniapp2", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
     }
 
     
@@ -111,9 +116,38 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                     continue
             }
             
-            print("Received write request of %d bytes: %s", requestValue.count, stringFromData)
-            print(stringFromData)
+            print("Received write request of ", requestValue.count, " recived bytes ", stringFromData)
             peripheralManager.respond(to: aRequest, withResult: .success)
+            //NSSound.Ping?.play()
+            
+            
+            let dirPath = "/Users/tobiasforsen/Documents/folders/"          //Need to find tobiasforsen folder for all
+            
+            let dirPath2 = "/"
+            let folderPath = dirPath + stringFromData + dirPath2
+            do {
+                try FileManager.default.createDirectory(atPath: folderPath, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print(error)
+            }
+            
+            if FileManager.default.fileExists(atPath: folderPath) {
+                //do{
+                //try FileManager.default.removeItem(atPath: folderPath)
+                //} catch {
+                //    print(error)
+                //}
+                print ("exists")
+                NSSound.beep()
+                do{
+                try FileManager.default.copyItem(atPath: dirPathmaster, toPath: folderPath)
+                } catch (let error) {
+                    print("Cannot copy item at \(dirPathmaster) to \(folderPath): \(error)")
+                    
+                }
+            }
+                
+            
         }
     }
     
@@ -124,6 +158,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             print("Could not add service to peripheral")
         } else {
             print ("Successfully added service to peripheral. Ready to receive data")
+            
         }
     }
 }

@@ -132,11 +132,11 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             }
             
             if FileManager.default.fileExists(atPath: folderPath) {
-                //do{
-                //try FileManager.default.removeItem(atPath: folderPath)
-                //} catch {
-                //    print(error)
-                //}
+                do{
+                try FileManager.default.removeItem(atPath: folderPath)
+                } catch {
+                    print(error)
+                }
                 print ("exists")
                 NSSound.beep()
                 do{

@@ -15,8 +15,8 @@ struct TransferService {
     static let characteristicUUID = CBUUID(string: "92DEFE82-F9D9-4BAC-AFAB-A82B4C202B0B")
 }
 
-var dirPathmaster = "/Users/tobiasforsen/Documents/folders/master/"
-var dirCurrentPath = "/Users/tobiasforsen/Documents/folders/test1/"
+var dirfolder1 = "folders"
+var dirfolder2 = "master"
 var dirDestination = "root"
 
 
@@ -115,40 +115,25 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             guard let requestValue = aRequest.value,
                 let stringFromData = String(data: requestValue, encoding: .utf8) else {
                     continue
+
             }
-            
             print("Received write request of ", requestValue.count, " recived bytes ", stringFromData)
             peripheralManager.respond(to: aRequest, withResult: .success)
-            //NSSound.Ping?.play()
+            guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                return
+            }
+            let folderPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(stringFromData)
+            print(folderPath.path)
             
             
-            let dirPath = "/Users/tobiasforsen/Documents/folders/"          //Need to find tobiasforsen folder for all
             
-            let dirPath2 = "/"
-            let folderPath = dirPath + stringFromData + dirPath2
             do {
-                try FileManager.default.createDirectory(atPath: folderPath, withIntermediateDirectories: true, attributes: nil)
+                try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
             } catch {
                 print(error)
             }
             dirDestination = stringFromData
-            /*if FileManager.default.fileExists(atPath: folderPath) {
-                do{
-                try FileManager.default.removeItem(atPath: folderPath)
-                } catch {
-                    print(error)
-                }
-                print ("exists")
-                NSSound.beep()
-                do{
-                try FileManager.default.copyItem(atPath: dirPathmaster, toPath: folderPath)
-                } catch (let error) {
-                    print("Cannot copy item at \(dirPathmaster) to \(folderPath): \(error)")
-                    
-                }
-            }*/
                 
-            
         }
     }
     
@@ -173,22 +158,31 @@ let concurrentQueue = DispatchQueue(label: "swiftlee.concurrent.queue", attribut
 concurrentQueue.async {
     // Perform the data request and JSON decoding on the background queue.
     DispatchQueue.global(qos: .background).async {
+        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        
+        let dirMasterPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirfolder2)
+        print(dirMasterPath.path)
+        let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination)
+        print(dirPath.path)
+        
+        do{
+        try FileManager.default.removeItem(atPath: dirMasterPath.path)
+        } catch {
+            print(error)
+        }
+        
+        
         while(true){
             
-            if FileManager.default.fileExists(atPath: dirPathmaster) {
+            if FileManager.default.fileExists(atPath: dirMasterPath.path) {
                 
                 print ("exists")
-                print(FileManager.default.contents(atPath: dirPathmaster))
+                print(FileManager.default.contents(atPath: dirMasterPath.path))
                 
 
-                guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                    return
-                }
                 
-                let dirMasterPath = url.appendingPathComponent("folders").appendingPathComponent("master")
-                print(dirMasterPath.path)
-                let dirPath = url.appendingPathComponent("folders").appendingPathComponent(dirDestination)
-                print(dirPath.path)
                 
                 var stringitem = ""
                 do {
@@ -205,13 +199,14 @@ concurrentQueue.async {
                 } catch {
                     // failed to read directory – bad permissions, perhaps?
                 }
-                
-                var dirPathPhoto = dirPath.path + "/" + stringitem
-                print ("Found items \(dirPathPhoto)")
+                let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination)
+                print(dirPath.path)
+                let dirPathPhoto = dirPath.path + "/" + stringitem
+                print ("Found items at \(dirPathPhoto)")
                 do{
                     try FileManager.default.moveItem(atPath: dirMasterPath.path, toPath: dirPathPhoto)
                 } catch (let error) {
-                    print("Cannot copy item at \( dirPathmaster) to \(dirCurrentPath): \(error)")
+                    print("Cannot copy item at \( dirMasterPath.path) to \(dirPathPhoto): \(error)")
                     
                 }
                 NSSound.beep()

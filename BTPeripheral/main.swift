@@ -177,12 +177,7 @@ concurrentQueue.async {
         while(true){
             
             if FileManager.default.fileExists(atPath: dirMasterPath.path) {
-                
-                print ("exists")
-                print(FileManager.default.contents(atPath: dirMasterPath.path))
-                
-
-                
+                                
                 
                 var stringitem = ""
                 do {

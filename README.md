@@ -43,6 +43,39 @@ on run {input, parameters}
 	return input
 end run
 ```
+To run with sony camera install "imaging edge desktop" then change the Automator script to
+```
+on run {input, parameters}
+	
+	tell application "Finder"
+		activate
+		if folder "master" of folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk exists then
+			"ok"
+		else
+			make new folder at folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk with properties {name:"namnlös mapp"}
+			set name of folder "namnlös mapp" of folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk to "master"
+		end if
+	end tell
+	
+	tell application "Remote" to activate
+	delay 5
+	
+	tell application "System Events" to key code 36 #return, to activate the camera selected. This have had som issues with the script. 								The key sending is not reliable.
+	delay 5
+	
+	
+	tell application "Terminal"
+		activate
+		do script "cd ~/Documents/Github/" in window 1
+
+		-- we use chmod to make launch.sh an executable
+		do script "chmod +x ./launch.sh && ./launch.sh" in window 1
+	end tell
+	
+	
+	return input
+end run
+```
 
 Where you replace the cd path to the path to your `launch.sh` file.
 

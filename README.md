@@ -31,7 +31,7 @@ This file is responsible for git pulling to get the latest version of this repo 
 
 ```
 on run {input, parameters}
-
+	
 	tell application "Terminal"
 		activate
 		do script "cd ~/sites/quixel" in window 1
@@ -46,6 +46,20 @@ end run
 To run with sony camera install "imaging edge desktop" then change the Automator script to
 ```
 on run {input, parameters}
+	set cameraConnected to 0
+	repeat while cameraConnected = 0
+	
+		set USB_Drives to {}
+		set USB to paragraphs of (do shell script "system_profiler SPUSBDataType -detailLevel basic")
+		repeat with i from 1 to (count of USB)
+		
+			if item i of USB contains "ILCE-7RM3" then
+				set cameraConnected to 1
+			
+			end if
+		end repeat
+		delay 1
+	end repeat
 	
 	tell application "Finder"
 		activate

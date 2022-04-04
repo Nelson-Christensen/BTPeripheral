@@ -46,31 +46,42 @@ end run
 To run with sony camera install "imaging edge desktop" then change the Automator script to
 ```
 on run {input, parameters}
+	tell application "Terminal"
+		activate
+		do script "cd ./Documents/Github" in window 1
+		
+		-- we use chmod to make launch.sh an executable
+		do script "chmod +x ./launch.sh && ./launch.sh" in window 1
+	end tell
+	delay 5
+	
 	set cameraConnected to 0
 	repeat while cameraConnected = 0
-	
+		
 		set USB_Drives to {}
 		set USB to paragraphs of (do shell script "system_profiler SPUSBDataType -detailLevel basic")
 		repeat with i from 1 to (count of USB)
-		
+			
 			if item i of USB contains "ILCE-7RM3" then
 				set cameraConnected to 1
-			
+				
 			end if
 		end repeat
 		delay 1
 	end repeat
+	delay 1
+	
 	
 	tell application "Finder"
 		activate
-		if folder "master" of folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk exists then
+		if folder "master" of folder "folders" of (path to documents folder) exists then
 			"ok"
 		else
-			make new folder at folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk with properties {name:"namnlös mapp"} //untitled folder
-			set name of folder "namnlös mapp" of folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk to "master"
+			make new folder at folder "folders" of (path to documents folder) with properties {name:"namnlös mapp"}
+			set name of folder "namnlös mapp" of folder "folders" of (path to documents folder) to "master"
 		end if
 	end tell
-	
+	delay 1
 	tell application "Remote" to activate
 	delay 5
 	
@@ -81,7 +92,7 @@ on run {input, parameters}
 	tell application "Terminal"
 		activate
 		do script "cd ~/Documents/Github/" in window 1
-
+		
 		-- we use chmod to make launch.sh an executable
 		do script "chmod +x ./launch.sh && ./launch.sh" in window 1
 	end tell

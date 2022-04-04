@@ -66,7 +66,7 @@ on run {input, parameters}
 		if folder "master" of folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk exists then
 			"ok"
 		else
-			make new folder at folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk with properties {name:"namnlös mapp"}
+			make new folder at folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk with properties {name:"namnlös mapp"} //untitled folder
 			set name of folder "namnlös mapp" of folder "folders" of folder "Documents" of folder "tobiasforsen" of folder "Users" of startup disk to "master"
 		end if
 	end tell

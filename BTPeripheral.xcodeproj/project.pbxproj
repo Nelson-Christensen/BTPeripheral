@@ -3,11 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		52301D2227CFA2DF0006D393 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52301D2127CFA2DF0006D393 /* main.swift */; };
+		D0817B3A27FDC4F1002F3C52 /* PythonKit in Frameworks */ = {isa = PBXBuildFile; productRef = D0817B3927FDC4F1002F3C52 /* PythonKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		52301D1E27CFA2DF0006D393 /* BTPeripheral */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BTPeripheral; sourceTree = BUILT_PRODUCTS_DIR; };
 		52301D2127CFA2DF0006D393 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		D0817B3B27FDD290002F3C52 /* BTPeripheral.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BTPeripheral.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0817B3A27FDC4F1002F3C52 /* PythonKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,6 +60,7 @@
 		52301D2027CFA2DF0006D393 /* BTPeripheral */ = {
 			isa = PBXGroup;
 			children = (
+				D0817B3B27FDD290002F3C52 /* BTPeripheral.entitlements */,
 				52301D2127CFA2DF0006D393 /* main.swift */,
 			);
 			path = BTPeripheral;
@@ -78,6 +82,9 @@
 			dependencies = (
 			);
 			name = BTPeripheral;
+			packageProductDependencies = (
+				D0817B3927FDC4F1002F3C52 /* PythonKit */,
+			);
 			productName = BTPeripheral;
 			productReference = 52301D1E27CFA2DF0006D393 /* BTPeripheral */;
 			productType = "com.apple.product-type.tool";
@@ -105,6 +112,9 @@
 				Base,
 			);
 			mainGroup = 52301D1527CFA2DF0006D393;
+			packageReferences = (
+				D0817B3827FDC4F1002F3C52 /* XCRemoteSwiftPackageReference "PythonKit" */,
+			);
 			productRefGroup = 52301D1F27CFA2DF0006D393 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -244,9 +254,10 @@
 		52301D2627CFA2DF0006D393 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = BTPeripheral/BTPeripheral.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = R7FYYJXGXR;
+				DEVELOPMENT_TEAM = 9XLS7NAQQ4;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -256,9 +267,10 @@
 		52301D2727CFA2DF0006D393 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = BTPeripheral/BTPeripheral.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = R7FYYJXGXR;
+				DEVELOPMENT_TEAM = 9XLS7NAQQ4;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -287,6 +299,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D0817B3827FDC4F1002F3C52 /* XCRemoteSwiftPackageReference "PythonKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pvieito/PythonKit.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D0817B3927FDC4F1002F3C52 /* PythonKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0817B3827FDC4F1002F3C52 /* XCRemoteSwiftPackageReference "PythonKit" */;
+			productName = PythonKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 52301D1627CFA2DF0006D393 /* Project object */;
 }

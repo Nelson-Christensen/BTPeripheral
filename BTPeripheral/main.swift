@@ -8,6 +8,11 @@
 import Foundation
 import CoreBluetooth
 import AppKit
+import PythonKit
+PythonLibrary.useVersion(3)
+print("Python version ")
+print(Python.version)
+
 
 
 struct TransferService {
@@ -21,7 +26,21 @@ struct TransferService {
 var dirfolder1 = "folders"
 var dirfolder2 = "master"
 var dirDestination = "root"
+var stringToWrite = ""
 
+func runPythonCode(){
+    guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+        return
+    }
+    let folderPathPython = url.appendingPathComponent("Github").appendingPathComponent("BTPeripheral").appendingPathComponent("BTPeripheral")
+    let sys = Python.import("sys")
+    sys.path.append(folderPathPython.path)
+    
+    let example = Python.import("sendArduino")
+    let response = example.write(stringToWrite)
+    let str = String(response)
+    print (str)
+}
 
 class Peripheral: NSObject, CBPeripheralManagerDelegate
 {
@@ -66,7 +85,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         // Save the characteristic for later.
         self.transferCharacteristic = assetIdCharacteristic
         
-        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "QuixelmacMiniapp2", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
+        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "QuixelmacMiniapp", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
     }
 
     
@@ -130,33 +149,40 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             case TransferService.assetIDCharacteristicsUUID:
                 print("Attempting to change assetId to: ", stringFromData)
                 print(stringFromData)
+                
                 peripheralManager.respond(to: aRequest, withResult: .success)
+                print("Received write request of ", requestValue.count, " recived bytes ", stringFromData)
+                peripheralManager.respond(to: aRequest, withResult: .success)
+                guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                    return
+                }
+                let folderPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(stringFromData)
+                print(folderPath.path)
+                
+                
+                
+                do {
+                    try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                    print(error)
+                }
+                dirDestination = stringFromData
+                
+                
+                
             case TransferService.commandsCharacteristicsUUID:
                 print("Sent remote control command: ", stringFromData)
                 print(stringFromData)
                 peripheralManager.respond(to: aRequest, withResult: .success)
+                stringToWrite = stringFromData
+                runPythonCode()
             default:
                 print(stringFromData)
                 print("Message sent to unknown characteristic")
                 peripheralManager.respond(to: aRequest, withResult: .requestNotSupported)
             }
 
-            print("Received write request of ", requestValue.count, " recived bytes ", stringFromData)
-            peripheralManager.respond(to: aRequest, withResult: .success)
-            guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-                return
-            }
-            let folderPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(stringFromData)
-            print(folderPath.path)
             
-            
-            
-            do {
-                try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
-            } catch {
-                print(error)
-            }
-            dirDestination = stringFromData
                 
         }
     }
@@ -240,4 +266,6 @@ concurrentQueue.async {
         print("Task 1 started")
     }
 }
+
+
 RunLoop.main.run()

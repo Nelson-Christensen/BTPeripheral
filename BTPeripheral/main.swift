@@ -9,6 +9,7 @@ import Foundation
 import CoreBluetooth
 import AppKit
 
+
 struct TransferService {
     static let serviceUUID = CBUUID(string: "1F2AD508-3BD6-485F-A2B1-F96ADBFB93E5")
     // This is for passing changes in the assetId folder to save to
@@ -16,6 +17,11 @@ struct TransferService {
     // This is to send commands for the 2D scanner with the remote control functionality
     static let commandsCharacteristicsUUID = CBUUID(string: "9AE32710-EB03-46CF-A9FB-D4F3536CCDF2")
 }
+
+var dirfolder1 = "folders"
+var dirfolder2 = "master"
+var dirDestination = "root"
+
 
 class Peripheral: NSObject, CBPeripheralManagerDelegate
 {
@@ -60,7 +66,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         // Save the characteristic for later.
         self.transferCharacteristic = assetIdCharacteristic
         
-        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "Quixel macMini app", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
+        peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "QuixelmacMiniapp2", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
     }
 
     
@@ -117,6 +123,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             guard let requestValue = aRequest.value,
                 let stringFromData = String(data: requestValue, encoding: .utf8) else {
                     continue
+
             }
             
             switch aRequest.characteristic.uuid {
@@ -133,6 +140,24 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 print("Message sent to unknown characteristic")
                 peripheralManager.respond(to: aRequest, withResult: .requestNotSupported)
             }
+
+            print("Received write request of ", requestValue.count, " recived bytes ", stringFromData)
+            peripheralManager.respond(to: aRequest, withResult: .success)
+            guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                return
+            }
+            let folderPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(stringFromData)
+            print(folderPath.path)
+            
+            
+            
+            do {
+                try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print(error)
+            }
+            dirDestination = stringFromData
+                
         }
     }
     
@@ -143,9 +168,76 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             print("Could not add service to peripheral")
         } else {
             print ("Successfully added service to peripheral. Ready to receive data")
+            
         }
     }
 }
-
 let myPeripheral = Peripheral.init()
+
+
+let concurrentQueue = DispatchQueue(label: "swiftlee.concurrent.queue", attributes: .concurrent)
+
+
+
+concurrentQueue.async {
+    // Perform the data request and JSON decoding on the background queue.
+    DispatchQueue.global(qos: .background).async {
+        guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        
+        let dirMasterPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirfolder2)
+        print(dirMasterPath.path)
+        let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination)
+        print(dirPath.path)
+        
+        do{
+        try FileManager.default.removeItem(atPath: dirMasterPath.path)
+        } catch {
+            print(error)
+        }
+        
+        
+        while(true){
+            
+            if FileManager.default.fileExists(atPath: dirMasterPath.path) {
+                                
+                
+                var stringitem = ""
+                do {
+                    let items = try FileManager.default.contentsOfDirectory(atPath: dirMasterPath.path)
+
+                    for item in items {
+                        print("Found \(item)")
+                        print("Found \(item.suffix(4))")
+                        stringitem = item
+                        stringitem.removeLast(4)
+                        print("Found \(stringitem)")
+                        print("Found items \(items.count)")
+                    }
+                } catch {
+                    // failed to read directory – bad permissions, perhaps?
+                }
+                let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination)
+                print(dirPath.path)
+                let dirPathPhoto = dirPath.path + "/" + stringitem
+                print ("Found items at \(dirPathPhoto)")
+                do{
+                    try FileManager.default.moveItem(atPath: dirMasterPath.path, toPath: dirPathPhoto)
+                } catch (let error) {
+                    print("Cannot copy item at \( dirMasterPath.path) to \(dirPathPhoto): \(error)")
+                    
+                }
+                NSSound.beep()
+                //NSSound(named: "Funk")?.play()
+            }
+            sleep(1)
+        }
+    }
+
+    DispatchQueue.main.async {
+        /// Access and reload the UI back on the main queue.
+        print("Task 1 started")
+    }
+}
 RunLoop.main.run()

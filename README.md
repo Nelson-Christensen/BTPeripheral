@@ -17,8 +17,11 @@ git pull
 
 echo waiting 1s before attempting to start
 sleep 1
-cd ./BTPeripheral
-swift main.swift
+
+swift build
+sleep 3
+swift run
+
 ```
 
 This file is responsible for git pulling to get the latest version of this repo and then starting up the swift application.

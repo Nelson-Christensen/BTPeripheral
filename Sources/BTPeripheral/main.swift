@@ -2,7 +2,7 @@
 //  main.swift
 //  BTPeripheral
 //
-//  Created by Nelson Christensen on 2022-03-02.
+//  Created by Nelson Christensen on 2022-03-02. Code added on by Tobias Forsén
 //
 
 import Foundation
@@ -12,8 +12,6 @@ import PythonKit
 PythonLibrary.useVersion(3)
 print("Python version ")
 print(Python.version)
-
-
 
 struct TransferService {
     static let serviceUUID = CBUUID(string: "1F2AD508-3BD6-485F-A2B1-F96ADBFB93E5")
@@ -32,10 +30,9 @@ func runPythonCode(){
     guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
         return
     }
-    let folderPathPython = url.appendingPathComponent("Github").appendingPathComponent("BTPeripheral").appendingPathComponent("BTPeripheral")
+    let folderPathPython = url.appendingPathComponent("Github").appendingPathComponent("BTPeripheral").appendingPathComponent("Sources").appendingPathComponent("BTPeripheral")
     let sys = Python.import("sys")
     sys.path.append(folderPathPython.path)
-    
     let example = Python.import("sendArduino")
     let response = example.write(stringToWrite)
     let str = String(response)
@@ -269,3 +266,4 @@ concurrentQueue.async {
 
 
 RunLoop.main.run()
+

@@ -213,7 +213,7 @@ concurrentQueue.async {
         let dirMasterPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirfolder2)
         print(dirMasterPath.path)
 
-        
+        NSSound(named: "Glass")?.play()
         
         while(true){
             
@@ -258,7 +258,7 @@ concurrentQueue.async {
                 print ("No master folder")
             }
             //sleep(1) //will sleep for 1 second
-            usleep(100000)//will sleep for 0.5 seconds
+            usleep(100000)//will sleep for 0.1 seconds
         }
     }
 

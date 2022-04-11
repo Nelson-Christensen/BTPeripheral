@@ -3,3 +3,5 @@
 ## User settings
 xcuserdata/
 .build/
+.DS_Store
+Sources/BTPeripheral/__pycache__/sendArduino.cpython-39.pyc

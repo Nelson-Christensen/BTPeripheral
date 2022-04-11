@@ -25,6 +25,7 @@ var dirfolder1 = "folders"
 var dirfolder2 = "master"
 var dirDestination = "root"
 var stringToWrite = ""
+var mute = 0
 
 func runPythonCode(){
     guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -211,14 +212,7 @@ concurrentQueue.async {
         
         let dirMasterPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirfolder2)
         print(dirMasterPath.path)
-        let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination)
-        print(dirPath.path)
-        
-        do{
-        try FileManager.default.removeItem(atPath: dirMasterPath.path)
-        } catch {
-            print(error)
-        }
+
         
         
         while(true){
@@ -232,29 +226,39 @@ concurrentQueue.async {
 
                     for item in items {
                         print("Found \(item)")
-                        print("Found \(item.suffix(4))")
                         stringitem = item
                         stringitem.removeLast(4)
-                        print("Found \(stringitem)")
                         print("Found items \(items.count)")
+                        
+                        if item.contains(".ARW") || item.contains(".JPG")  {
+                            let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).appendingPathComponent(item).path
+                            
+                            let oldFile = dirMasterPath.appendingPathComponent(item).path
+
+                            do{
+                                try FileManager.default.moveItem(atPath: oldFile, toPath: dirPath)
+                                if mute == 0{
+                                    NSSound.beep()
+                                }
+                                
+                            } catch   {
+                                print("error")
+                            }
+
+                        }
                     }
                 } catch {
                     // failed to read directory – bad permissions, perhaps?
-                }
-                let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination)
-                print(dirPath.path)
-                let dirPathPhoto = dirPath.path + "/" + stringitem
-                print ("Found items at \(dirPathPhoto)")
-                do{
-                    try FileManager.default.moveItem(atPath: dirMasterPath.path, toPath: dirPathPhoto)
-                } catch (let error) {
-                    print("Cannot copy item at \( dirMasterPath.path) to \(dirPathPhoto): \(error)")
                     
                 }
-                NSSound.beep()
+                
+
                 //NSSound(named: "Funk")?.play()
+            } else {
+                print ("No master folder")
             }
-            sleep(1)
+            //sleep(1) //will sleep for 1 second
+            usleep(100000)//will sleep for 0.5 seconds
         }
     }
 

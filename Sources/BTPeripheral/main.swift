@@ -213,6 +213,7 @@ concurrentQueue.async {
         let dirMasterPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirfolder2)
         print(dirMasterPath.path)
 
+
         NSSound(named: "Glass")?.play()
         
         while(true){
@@ -228,7 +229,7 @@ concurrentQueue.async {
                         print("Found \(item)")
                         stringitem = item
                         stringitem.removeLast(4)
-                        print("Found items \(items.count)")
+                        //print("Found items \(items.count)")
                         
                         if item.contains(".ARW") || item.contains(".JPG")  {
                             let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).appendingPathComponent(item).path
@@ -245,6 +246,14 @@ concurrentQueue.async {
                                 print("error")
                             }
 
+                        } else if item.contains(".DS_Store"){ // Remove ds_store
+                            do{
+                                
+                                try FileManager.default.removeItem(atPath: dirMasterPath.appendingPathComponent(item).path)
+                                print("Removed \(item)")
+                            } catch {
+                                print(error)
+                            }
                         }
                     }
                 } catch {

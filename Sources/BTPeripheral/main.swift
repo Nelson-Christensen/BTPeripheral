@@ -232,7 +232,27 @@ concurrentQueue.async {
                         //print("Found items \(items.count)")
                         
                         if item.contains(".ARW") || item.contains(".JPG")  {
-                            let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).appendingPathComponent(item).path
+                            //Date------ START
+                            let date = NSDate()
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "yyyy:MM:dd HH-mm-ss "
+                            var stringName = dateFormatter.string(from: date as Date)
+                            
+                            print(date)
+                            stringName.append(contentsOf: stringitem)
+                            if item.contains(".ARW"){
+                                
+                                stringName.append(contentsOf: ".ARW")
+                            } else {
+                                
+                                stringName.append(contentsOf: ".JPG")
+                            }
+                            
+                            
+                            print(stringName)
+                            //Date------ END
+                            
+                            let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).appendingPathComponent(stringName).path // (item).path
                             
                             let oldFile = dirMasterPath.appendingPathComponent(item).path
 

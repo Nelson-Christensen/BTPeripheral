@@ -167,7 +167,6 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                     print ("H-D")
                     do {
                         try FileManager.default.createDirectory(atPath: HDfolderPath, withIntermediateDirectories: true, attributes: nil)
-                        print(HDfolderPath)
                     } catch {
                         print(error)
                     }
@@ -175,7 +174,6 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                     print ("MAC")
                     do {
                         try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
-                        print(folderPath.path)
                     } catch {
                         print(error)
                     }
@@ -249,7 +247,7 @@ concurrentQueue.async {
                         stringitem.removeLast(4)
                         //print("Found items \(items.count)")
                         
-                        if item.contains(".ARW") || item.contains(".JPG")  {
+                        if item.contains(".ARW") || item.contains(".JPG") || item.contains(".raf") {
                             //Date------ START
                             let date = NSDate()
                             let dateFormatter = DateFormatter()
@@ -261,9 +259,12 @@ concurrentQueue.async {
                             if item.contains(".ARW"){
                                 
                                 stringName.append(contentsOf: ".ARW")
-                            } else {
+                            } else if item.contains(".JPG"){
                                 
                                 stringName.append(contentsOf: ".JPG")
+                            } else if item.contains(".raf"){
+                                
+                                stringName.append(contentsOf: ".raf")
                             }
                             
                             

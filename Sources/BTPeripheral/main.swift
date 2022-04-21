@@ -209,10 +209,12 @@ concurrentQueue.async {
         guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             return
         }
-        
-        let dirMasterPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirfolder2)
-        print(dirMasterPath.path)
 
+        let dirMasterPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirfolder2)
+        
+        print(dirMasterPath.path)
+        
+        
 
         NSSound(named: "Glass")?.play()
         
@@ -252,20 +254,41 @@ concurrentQueue.async {
                             print(stringName)
                             //Date------ END
                             
-                            let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).appendingPathComponent(stringName).path // (item).path
-                            
                             let oldFile = dirMasterPath.appendingPathComponent(item).path
-
-                            do{
-                                try FileManager.default.moveItem(atPath: oldFile, toPath: dirPath)
-                                if mute == 0{
-                                    NSSound.beep()
+                            
+                            let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).appendingPathComponent(stringName).path // (item).path
+                            let xdirPath = "/Volumes/T7/folders/"
+                            
+                            let xdirPath2 = "/"
+                            let HDfolderPath = xdirPath + dirDestination + xdirPath2 + stringName + xdirPath2
+                            
+                            if FileManager.default.fileExists(atPath: xdirPath) {
+                                print ("H-D")
+                                do{
+                                    try FileManager.default.moveItem(atPath: oldFile, toPath: HDfolderPath)
+                                    if mute == 0{
+                                        NSSound.beep()
+                                    }
+                                } catch   {
+                                    print("error")
                                 }
-                                
-                            } catch   {
-                                print("error")
-                            }
+                            } else {
+                                print ("MAC")
+                                do{
+                                    try FileManager.default.moveItem(atPath: oldFile, toPath: dirPath)
+                                    if mute == 0{
+                                        NSSound.beep()
+                                    }
+                                    
+                                } catch   {
+                                    print("error")
+                                }
 
+                            }
+                            
+                           
+
+                            
                         } else if item.contains(".DS_Store"){ // Remove ds_store
                             do{
                                 

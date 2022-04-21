@@ -154,17 +154,36 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
                     return
                 }
+                
                 let folderPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(stringFromData)
-                print(folderPath.path)
                 
                 
+                let xdirPath = "/Volumes/T7/folders/"
                 
-                do {
-                    try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
-                } catch {
-                    print(error)
+                let xdirPath2 = "/"
+                let HDfolderPath = xdirPath + stringFromData + xdirPath2
+                
+                if FileManager.default.fileExists(atPath: xdirPath) {
+                    print ("H-D")
+                    do {
+                        try FileManager.default.createDirectory(atPath: HDfolderPath, withIntermediateDirectories: true, attributes: nil)
+                        print(HDfolderPath)
+                    } catch {
+                        print(error)
+                    }
+                } else {
+                    print ("MAC")
+                    do {
+                        try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
+                        print(folderPath.path)
+                    } catch {
+                        print(error)
+                    }
+
                 }
                 dirDestination = stringFromData
+              
+                
                 
                 
                 
@@ -179,9 +198,6 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 print("Message sent to unknown characteristic")
                 peripheralManager.respond(to: aRequest, withResult: .requestNotSupported)
             }
-
-            
-                
         }
     }
     

@@ -251,7 +251,7 @@ concurrentQueue.async {
                             //Date------ START
                             let date = NSDate()
                             let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "yyyy:MM:dd HH-mm-ss "
+                            dateFormatter.dateFormat = "yyyy-MM-dd HH-mm-ss "
                             var stringName = dateFormatter.string(from: date as Date)
                             
                             print(date)

@@ -23,8 +23,9 @@ struct TransferService {
 
 var dirfolder1 = "folders"
 var dirfolder2 = "master"
-var dirDestination = "root"
+var dirDestination = "asset_temp"
 var stringToWrite = ""
+var stringHDName = ""
 var mute = 0
 
 func runPythonCode(){
@@ -158,7 +159,18 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 let folderPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(stringFromData)
                 
                 
-                let xdirPath = "/Volumes/T7/folders/"
+                do {
+                    let items = try FileManager.default.contentsOfDirectory(atPath: "/Volumes/")
+
+                    for item in items {
+                        if item != "Macintosh HD"{
+                            stringHDName = item
+                        }
+                    }
+                } catch {
+                    // failed to read directory – bad permissions, perhaps?
+                }
+                let xdirPath = "/Volumes/" + stringHDName + "/folders/"
                 
                 let xdirPath2 = "/"
                 let HDfolderPath = xdirPath + stringFromData + xdirPath2
@@ -254,7 +266,6 @@ concurrentQueue.async {
                             dateFormatter.dateFormat = "yyyy-MM-dd HH-mm-ss "
                             var stringName = dateFormatter.string(from: date as Date)
                             
-                            print(date)
                             stringName.append(contentsOf: stringitem)
                             if item.contains(".ARW"){
                                 
@@ -267,30 +278,55 @@ concurrentQueue.async {
                                 stringName.append(contentsOf: ".raf")
                             }
                             
-                            
                             print(stringName)
                             //Date------ END
                             
                             let oldFile = dirMasterPath.appendingPathComponent(item).path
                             
                             let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).appendingPathComponent(stringName).path // (item).path
-                            let xdirPath = "/Volumes/T7/folders/"
-                            
+                            do {
+                                let items = try FileManager.default.contentsOfDirectory(atPath: "/Volumes/")
+
+                                for item in items {
+                                    if item != "Macintosh HD"{
+                                        stringHDName = item
+                                    }
+                                }
+                            } catch {
+                                // failed to read directory – bad permissions, perhaps?
+                            }
+                            let xdirPath = "/Volumes/" + stringHDName + "/folders/"
                             let xdirPath2 = "/"
+                            let HDfolder = xdirPath + dirDestination + xdirPath2
                             let HDfolderPath = xdirPath + dirDestination + xdirPath2 + stringName + xdirPath2
                             
                             if FileManager.default.fileExists(atPath: xdirPath) {
                                 print ("H-D")
+                                if !FileManager.default.fileExists(atPath: HDfolder) {
+                                    do {
+                                        try FileManager.default.createDirectory(atPath: HDfolder, withIntermediateDirectories: true, attributes: nil)
+                                    } catch {
+                                        print(error)
+                                    }
+                                }
                                 do{
                                     try FileManager.default.moveItem(atPath: oldFile, toPath: HDfolderPath)
                                     if mute == 0{
                                         NSSound.beep()
                                     }
                                 } catch   {
-                                    print("error")
+                                    print("Move H-D error")
                                 }
                             } else {
                                 print ("MAC")
+                                if !FileManager.default.fileExists(atPath: url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).path) {
+                                    do {
+                                        try FileManager.default.createDirectory(atPath: url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).path, withIntermediateDirectories: true, attributes: nil)
+                                    } catch {
+                                        print(error)
+                                    }
+                                }
+                                
                                 do{
                                     try FileManager.default.moveItem(atPath: oldFile, toPath: dirPath)
                                     if mute == 0{
@@ -298,7 +334,7 @@ concurrentQueue.async {
                                     }
                                     
                                 } catch   {
-                                    print("error")
+                                    print("Move Mac error")
                                 }
 
                             }

@@ -28,11 +28,11 @@ def write_read(x):
 
 
 def write(x):
-        if arduino.isOpen() == True:
-            try:
-                arduino.write(bytes(x, 'utf-8'))
-                print(bytes(x, 'utf-8'))
-            except:
-                print("Device Error, did not write, try connect usb and restart this program!")
+    if arduino.isOpen() == True:
+        try:
+            arduino.write(bytes(x, 'utf-8'))
+            print(bytes(x, 'utf-8'))
+        except:
+            print("Device Error, did not write, try connect usb and restart this program!")
 
     return "sent"

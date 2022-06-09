@@ -28,19 +28,21 @@ swift run
 
 This file is responsible for git pulling to get the latest version of this repo and then starting up the swift application.
 
-### Create Automation
+### Create Automation For MKV
 
 1. Open up the `Automator` app
 2. Create new Application Automation (File -> New -> Application)
 3. Add a `Run applescript` action and paste the following content:
+4. Save the script to "Quixel Recive" in the Desktop
+5. Change the logo on the script in: "show content" "resources" replace icon. And then drag and drop in preferences
 
 ```
 on run {input, parameters}
 	
 	tell application "Terminal"
 		activate
-		do script "cd ~/sites/quixel" in window 1
-
+		do script "cd ~/Documents/Github/" in window 1
+		
 		-- we use chmod to make launch.sh an executable
 		do script "chmod +x ./launch.sh && ./launch.sh" in window 1
 	end tell
@@ -48,6 +50,7 @@ on run {input, parameters}
 	return input
 end run
 ```
+### Create Automation For MKIII
 To run with sony camera install "imaging edge desktop" then change the Automator script to
 ```
 on run {input, parameters}

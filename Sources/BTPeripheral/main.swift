@@ -38,7 +38,6 @@ func runPythonCode(){
     let example = Python.import("sendArduino")
     let response = example.write(stringToWrite)
     let str = String(response)
-    print (str)
 }
 
 class Peripheral: NSObject, CBPeripheralManagerDelegate
@@ -259,7 +258,7 @@ concurrentQueue.async {
                         stringitem.removeLast(4)
                         //print("Found items \(items.count)")
                         
-                        if item.contains(".ARW") || item.contains(".JPG") || item.contains(".raf") {
+                        if item.contains(".ARW") || item.contains(".JPG") || item.contains(".raf") || item.contains(".RAF"){
                             //Date------ START
                             let date = NSDate()
                             let dateFormatter = DateFormatter()
@@ -276,8 +275,10 @@ concurrentQueue.async {
                             } else if item.contains(".raf"){
                                 
                                 stringName.append(contentsOf: ".raf")
+                            } else if item.contains(".RAF"){
+                                
+                                stringName.append(contentsOf: ".RAF")
                             }
-                            
                             print(stringName)
                             //Date------ END
                             

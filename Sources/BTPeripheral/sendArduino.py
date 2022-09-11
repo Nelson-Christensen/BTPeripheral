@@ -16,7 +16,7 @@ if arduinoFound == 1:
     try:
         arduino = serial.Serial(port=portInUse, baudrate=115200, timeout=.1)
     except:
-        print("Device Error, did not establish contact, try connect usb and restart this program!")
+        print("Serial Error, did not establish contact, try connect usb and restart this program!")
 
 
 def write_read(x):

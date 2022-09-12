@@ -19,6 +19,8 @@ struct TransferService {
     static let assetIDCharacteristicsUUID = CBUUID(string: "92DEFE82-F9D9-4BAC-AFAB-A82B4C202B0B")
     // This is to send commands for the 2D scanner with the remote control functionality
     static let commandsCharacteristicsUUID = CBUUID(string: "9AE32710-EB03-46CF-A9FB-D4F3536CCDF2")
+    // This characteristic just broadcasts the systems bluetooth macAddress for identification purposes
+    static let macAddressCharacteristicsUUID = CBUUID(string: "7C7A74F8-BCC1-4C82-B924-73946338A61C")
 }
 
 var dirfolder1 = "folders"
@@ -59,6 +61,28 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
     private func setupPeripheral() {
         // Build our service.
         print("Setting up peripheral")
+        if let deviceName = Host.current().localizedName {
+           print("DeviceName: ", deviceName)
+        }
+        
+        // Read the bluetooth macAddress of the system. It can't be done through swift, so we open up a
+        // terminal process and run the command from there and pass the result back to the swift program
+        let task = Process()
+        task.launchPath = "/usr/bin/env"
+        task.arguments = ["system_profiler", "SPBluetoothDataType"]
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = pipe
+        task.launch()
+        task.waitUntilExit()
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let output: String = NSString(data: data, encoding: String.Encoding.utf8.rawValue) as! String
+        let log = output;
+        let logArray = output.components(separatedBy: "Address: ");
+        let firstAddress = logArray[1];
+        let bluetoothAddress = firstAddress.prefix(17);
+        print("MAC Address: ", bluetoothAddress);
+        
         
         // Start with the CBMutableCharacteristic.
         let assetIdCharacteristic = CBMutableCharacteristic(type: TransferService.assetIDCharacteristicsUUID,
@@ -71,11 +95,16 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                                                          value: nil,
                                                          permissions: [.writeable])
         
+        let macAddressCharacteristic = CBMutableCharacteristic(type: TransferService.macAddressCharacteristicsUUID,
+                                                               properties: [.read],
+                                                               value: bluetoothAddress.data(using: .utf8),
+                                                         permissions: [.readable])
+        
         // Create a service from the characteristic.
         let transferService = CBMutableService(type: TransferService.serviceUUID, primary: true)
         
         // Add the characteristic to the service.
-        transferService.characteristics = [assetIdCharacteristic, commandCharacteristic]
+        transferService.characteristics = [assetIdCharacteristic, commandCharacteristic, macAddressCharacteristic]
         
         // And add it to the peripheral manager.
         peripheralManager.add(transferService)

@@ -91,7 +91,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                                                          permissions: [.readable, .writeable])
         
         let commandCharacteristic = CBMutableCharacteristic(type: TransferService.commandsCharacteristicsUUID,
-                                                             properties: [.write],
+                                                            properties: [.writeWithoutResponse],
                                                          value: nil,
                                                          permissions: [.writeable])
         

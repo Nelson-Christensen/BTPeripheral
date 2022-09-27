@@ -131,69 +131,75 @@ Go to `System Preferences -> Users & Groups -> Login Options` and change automat
 
 #### test with arduino 
 
-String inputString = "";         // a String to hold incoming data
-bool stringA = false;  // whether the string is complete
+String inputString = ""; // a String to hold incoming data 
+bool stringA = false; // whether the string is complete 
 bool stringB = false; 
-bool stringC = false; 
+bool stringC = false;
+bool stringD = false;
+int pinLed = 13;
 
-void setup() {
-  // initialize serial:
-   Serial.begin(115200);
- Serial.setTimeout(1);
-    pinMode(12, OUTPUT);
+void setup() { // initialize serial: 
+  Serial.begin(115200); 
+  Serial.setTimeout(1); 
+  pinMode(pinLed, OUTPUT);
 
-  // reserve 200 bytes for the inputString:
-  inputString.reserve(20);
+  // reserve 200 bytes for the inputString: 
+  inputString.reserve(20); 
 }
 
-void loop() {
-  // print the string when a newline arrives:
+void loop() { // print the string when a newline arrives: 
   if (stringA) {
-
-      digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-      delay(100);
-      digitalWrite(12, LOW);
-    
-    // clear the string:
-    stringA = false;
+  for(int x=0; x<1; x++){
+    digitalWrite(pinLed, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(100);
+    digitalWrite(pinLed, LOW);
+    delay(300);
   }
-  if (stringB) {
 
-      digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-      delay(1000);
-      digitalWrite(12, LOW);
-    
-    // clear the string:
-    stringB = false;
-  }
-    if (stringC) {
+// clear the string:
+stringA = false;
+} if (stringB) {
 
-      digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-      delay(500);
-      digitalWrite(12, LOW);
-      delay(1000);
-      digitalWrite(12, HIGH);   // turn the LED on (HIGH is the voltage level)
-      delay(500);
-      digitalWrite(12, LOW);
-    
-    // clear the string:
-    stringC = false;
+  for(int x=0; x<2; x++){
+    digitalWrite(pinLed, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(100);
+    digitalWrite(pinLed, LOW);
+    delay(300);
   }
+
+// clear the string:
+stringB = false;
+} if (stringC) {
+
+  for(int x=0; x<3; x++){
+    digitalWrite(pinLed, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(100);
+    digitalWrite(pinLed, LOW);
+    delay(300);
+  }
+
+// clear the string:
+stringC = false;
+} if (stringD) {
+
+  for(int x=0; x<4; x++){
+    digitalWrite(pinLed, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(100);
+    digitalWrite(pinLed, LOW);
+    delay(300);
+  }
+
+// clear the string:
+stringD = false;
+} 
 }
 
-/*
-  SerialEvent occurs whenever a new data comes in the hardware serial RX. This
-  routine is run between each time loop() runs, so using delay inside loop can
-  delay response. Multiple bytes of data may be available.
-*/
-void serialEvent() {
-  while (Serial.available()) {
-    // get the new byte:
-    char inChar = (char)Serial.read();
-    // add it to the inputString:
-    inputString += inChar;
-
-    
+/* SerialEvent occurs whenever a new data comes in the hardware serial RX. This routine is run between each time loop() runs, so using delay inside loop can delay response. Multiple bytes of data may be available. */ 
+void serialEvent() { 
+  while (Serial.available()) 
+  { // get the new byte: 
+    char inChar = (char)Serial.read(); // add it to the inputString: inputString += inChar;
+  
     // if the incoming character is a newline, set a flag so the main loop can
     // do something about it:
     if (inChar == 'A') {
@@ -205,5 +211,8 @@ void serialEvent() {
     if (inChar == 'C') {
       stringC = true;
     }
-  }
+    if (inChar == 'D') {
+      stringD = true;
+    }
+  } 
 }

@@ -360,7 +360,7 @@ concurrentQueue.async {
                                 do{
                                     try FileManager.default.moveItem(atPath: oldFile, toPath: dirPath)
                                     if mute == 0{
-                                        NSSound.beep()
+                                        NSSound(named: "Sonar")?.play()
                                     }
                                     
                                 } catch   {

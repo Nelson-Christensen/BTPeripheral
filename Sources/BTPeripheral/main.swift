@@ -216,10 +216,9 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 print("Attempting to change assetId to: ", stringFromData)
                 print(stringFromData)
                 
-                peripheralManager.respond(to: aRequest, withResult: .success)
                 print("Received write request of ", requestValue.count, " recived bytes ", stringFromData)
-                peripheralManager.respond(to: aRequest, withResult: .success)
                 guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                    peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                     return
                 }
                 
@@ -235,6 +234,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                         }
                     }
                 } catch {
+                    peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                     // failed to read directory – bad permissions, perhaps?
                 }
                 let xdirPath = "/Volumes/" + stringHDName + "/folders/"
@@ -248,6 +248,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                         try FileManager.default.createDirectory(atPath: HDfolderPath, withIntermediateDirectories: true, attributes: nil)
                     } catch {
                         print(error)
+                        peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                     }
                 } else {
                     print ("MAC")
@@ -255,21 +256,31 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                         try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
                     } catch {
                         print(error)
+                        peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                     }
 
                 }
                 dirDestination = stringFromData
-              
+                // This response doesn't get received on the mobile app. So we need to send an update to
+                // the value (notify subscribers) with the new value as a confirmation for the mobile app
+                peripheralManager.respond(to: aRequest, withResult: .success)
                 
+                if ((self.transferCharacteristic) != nil) {
+                    let defaultData = "asset_temp".data(using: .utf8)
+                    self.transferCharacteristic?.value = aRequest.value
+                    
+                    peripheral.updateValue(aRequest.value ?? defaultData!, for: self.transferCharacteristic!, onSubscribedCentrals: [aRequest.central])
+                }
                 
+
                 
                 
             case TransferService.commandsCharacteristicsUUID:
                 print("Sent remote control command: ", stringFromData)
                 print(stringFromData)
-                peripheralManager.respond(to: aRequest, withResult: .success)
                 stringToWrite = stringFromData
                 runPythonCode()
+                peripheralManager.respond(to: aRequest, withResult: .success)
             default:
                 print(stringFromData)
                 print("Message sent to unknown characteristic")

@@ -125,12 +125,12 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         
         // Start with the CBMutableCharacteristic.
         let assetIdCharacteristic = CBMutableCharacteristic(type: TransferService.assetIDCharacteristicsUUID,
-                                                             properties: [.notify, .writeWithoutResponse, .write],
-                                                         value: nil,
+                                                            properties: [.notify, .writeWithoutResponse, .write, .read],
+                                                            value: nil,
                                                          permissions: [.readable, .writeable])
         
         let commandCharacteristic = CBMutableCharacteristic(type: TransferService.commandsCharacteristicsUUID,
-                                                            properties: [.writeWithoutResponse],
+                                                            properties: [.writeWithoutResponse, .write],
                                                          value: nil,
                                                          permissions: [.writeable])
         
@@ -218,6 +218,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 
                 print("Received write request of ", requestValue.count, " recived bytes ", stringFromData)
                 guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                    print("Could not get documentDirectory")
                     peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                     return
                 }
@@ -234,6 +235,8 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                         }
                     }
                 } catch {
+                    print(error)
+                    print("Failed to read directory")
                     peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                     // failed to read directory – bad permissions, perhaps?
                 }
@@ -248,6 +251,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                         try FileManager.default.createDirectory(atPath: HDfolderPath, withIntermediateDirectories: true, attributes: nil)
                     } catch {
                         print(error)
+                        print("Could not create new directory")
                         peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                     }
                 } else {
@@ -256,6 +260,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                         try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
                     } catch {
                         print(error)
+                        print("Could not create new directory")
                         peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                     }
 
@@ -265,22 +270,40 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 // the value (notify subscribers) with the new value as a confirmation for the mobile app
                 peripheralManager.respond(to: aRequest, withResult: .success)
                 
-                if ((self.transferCharacteristic) != nil) {
-                    let defaultData = "asset_temp".data(using: .utf8)
-                    self.transferCharacteristic?.value = aRequest.value
-                    
-                    peripheral.updateValue(aRequest.value ?? defaultData!, for: self.transferCharacteristic!, onSubscribedCentrals: [aRequest.central])
-                }
-                
-
-                
-                
             case TransferService.commandsCharacteristicsUUID:
                 print("Sent remote control command: ", stringFromData)
                 print(stringFromData)
-                stringToWrite = stringFromData
-                runPythonCode()
+                
+                if (stringFromData == "clear") {
+                    // Handle Clear MacMini Storage
+                    guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
+                        peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
+                        return
+                    }
+                    
+                    let folderPath = url.appendingPathComponent(dirfolder1)
+                    
+                    do {
+                        let fileName = try FileManager.default.contentsOfDirectory(atPath: folderPath.path)
+
+                        for file in fileName {
+                            if (file != "master"){
+                                // For each file in the directory, create full path and delete the file
+                                let filePath = URL(fileURLWithPath: folderPath.path).appendingPathComponent(file).absoluteURL
+                                try FileManager.default.removeItem(at: filePath)
+                            }
+                        }
+                    } catch {
+                        print(error)
+                        peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
+                    }
+                } else {
+                    // Handle Remote Control Commands
+                    stringToWrite = stringFromData
+                    runPythonCode()
+                }
                 peripheralManager.respond(to: aRequest, withResult: .success)
+
             default:
                 print(stringFromData)
                 print("Message sent to unknown characteristic")

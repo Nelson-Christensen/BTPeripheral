@@ -23,6 +23,8 @@ struct TransferService {
     static let commandsCharacteristicsUUID = CBUUID(string: "9AE32710-EB03-46CF-A9FB-D4F3536CCDF2")
     // This characteristic just broadcasts the systems bluetooth macAddress for identification purposes
     static let macAddressCharacteristicsUUID = CBUUID(string: "7C7A74F8-BCC1-4C82-B924-73946338A61C")
+    // This characteristic will notify all subscribers when a new photo is added
+    static let imgCountCharacteristicUUID = CBUUID(string: "A103AF39-F582-428E-8A67-26CC1770E96C")
 }
 
 var dirfolder1 = "folders"
@@ -83,10 +85,23 @@ func runPythonCode(){
 
 class Peripheral: NSObject, CBPeripheralManagerDelegate
 {
+    func updateImageCount(count: Int){
+        // I could not successfully send it as an int for some reason, so we just convert it to a string for now.
+        // var myInt = count;
+        // let dataCount = Data(bytes: &myInt, count: MemoryLayout.size(ofValue: myInt));
+        // let base64 = dataCount.base64EncodedData();
+        let intStringBase64 = String(count).data(using: .utf8);
+        // let intData = NSData(bytes: &count, length: sizeof(NSInteger));
+        if (intStringBase64 != nil){
+            imgCountCharacteristic.value = intStringBase64;
+            let updateResult = peripheralManager.updateValue(intStringBase64!, for: imgCountCharacteristic, onSubscribedCentrals: nil);
+        }
+    }
     var peripheralManager : CBPeripheralManager!
     
-    var transferCharacteristic: CBMutableCharacteristic?
-    
+    var imgCountCharacteristic : CBMutableCharacteristic!
+    var assetIdCharacteristic : CBMutableCharacteristic!
+
     override init(){
         super.init()
         peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: [CBPeripheralManagerOptionShowPowerAlertKey: true])
@@ -124,7 +139,7 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
         
         
         // Start with the CBMutableCharacteristic.
-        let assetIdCharacteristic = CBMutableCharacteristic(type: TransferService.assetIDCharacteristicsUUID,
+        assetIdCharacteristic = CBMutableCharacteristic(type: TransferService.assetIDCharacteristicsUUID,
                                                             properties: [.notify, .writeWithoutResponse, .write, .read],
                                                             value: nil,
                                                          permissions: [.readable, .writeable])
@@ -139,17 +154,19 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                                                                value: bluetoothAddress.data(using: .utf8),
                                                          permissions: [.readable])
         
+        imgCountCharacteristic = CBMutableCharacteristic(type: TransferService.imgCountCharacteristicUUID,
+                                                                     properties: [.read, .notify, .indicate],
+                                                                     value: nil,
+                                                         permissions: [.readable, .readEncryptionRequired])
+        
         // Create a service from the characteristic.
         let transferService = CBMutableService(type: TransferService.serviceUUID, primary: true)
         
         // Add the characteristic to the service.
-        transferService.characteristics = [assetIdCharacteristic, commandCharacteristic, macAddressCharacteristic]
+        transferService.characteristics = [assetIdCharacteristic, commandCharacteristic, macAddressCharacteristic, imgCountCharacteristic]
         
         // And add it to the peripheral manager.
         peripheralManager.add(transferService)
-        
-        // Save the characteristic for later.
-        self.transferCharacteristic = assetIdCharacteristic
         
         peripheralManager.startAdvertising([CBAdvertisementDataLocalNameKey : "QuixelmacMiniapp", CBAdvertisementDataServiceUUIDsKey: [TransferService.serviceUUID]])
     }
@@ -201,6 +218,27 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
     }
     
     /*
+     * This callback comes in when the PeripheralManager received read requests to characteristics
+     */
+    func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveRead request: CBATTRequest) {
+        print("Received a single read request.");
+        
+        switch request.characteristic.uuid {
+        case TransferService.assetIDCharacteristicsUUID:
+            request.value = assetIdCharacteristic.value;
+            print("Received read request for assetId: ");
+            peripheralManager.respond(to: request, withResult: .success);
+        case TransferService.imgCountCharacteristicUUID:
+            request.value = imgCountCharacteristic.value;
+            print("Received read request for img count.");
+            peripheralManager.respond(to: request, withResult: .success)
+        default:
+            peripheralManager.respond(to: request, withResult: .unlikelyError)
+            return;
+        }
+    }
+    
+    /*
      * This callback comes in when the PeripheralManager received write to characteristics
      */
     func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
@@ -208,7 +246,6 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
             guard let requestValue = aRequest.value,
                 let stringFromData = String(data: requestValue, encoding: .utf8) else {
                     continue
-
             }
             
             switch aRequest.characteristic.uuid {
@@ -245,29 +282,27 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 let xdirPath2 = "/"
                 let HDfolderPath = xdirPath + stringFromData + xdirPath2
                 
+                var assetFolder = folderPath;
                 if FileManager.default.fileExists(atPath: xdirPath) {
-                    print ("H-D")
-                    do {
-                        try FileManager.default.createDirectory(atPath: HDfolderPath, withIntermediateDirectories: true, attributes: nil)
-                    } catch {
-                        print(error)
-                        print("Could not create new directory")
-                        peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
-                    }
+                    print("H-D")
+                    assetFolder = URL(fileURLWithPath: HDfolderPath);
                 } else {
-                    print ("MAC")
-                    do {
-                        try FileManager.default.createDirectory(atPath: folderPath.path, withIntermediateDirectories: true, attributes: nil)
-                    } catch {
-                        print(error)
-                        print("Could not create new directory")
-                        peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
-                    }
-
+                    print("MAC")
+                }
+                do {
+                    try FileManager.default.createDirectory(atPath: assetFolder.path, withIntermediateDirectories: true, attributes: nil)
+                    
+                    let numberOfItems = try FileManager.default.contentsOfDirectory(at: assetFolder, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles).count;
+                    print("Number of images in folder: " + String(numberOfItems));
+                    myPeripheral.updateImageCount(count: numberOfItems);
+                } catch {
+                    print(error)
+                    print("Could not create new directory")
+                    peripheralManager.respond(to: aRequest, withResult: .unlikelyError)
                 }
                 dirDestination = stringFromData
-                // This response doesn't get received on the mobile app. So we need to send an update to
-                // the value (notify subscribers) with the new value as a confirmation for the mobile app
+                assetIdCharacteristic.value = requestValue;
+                
                 peripheralManager.respond(to: aRequest, withResult: .success)
                 
             case TransferService.commandsCharacteristicsUUID:
@@ -386,7 +421,8 @@ concurrentQueue.async {
                             
                             let oldFile = dirMasterPath.appendingPathComponent(item).path
                             
-                            let dirPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination).appendingPathComponent(stringName).path // (item).path
+                            let dirFolderPath = url.appendingPathComponent(dirfolder1).appendingPathComponent(dirDestination)
+                            let dirPath = dirFolderPath.appendingPathComponent(stringName).path // (item).path
                             do {
                                 let items = try FileManager.default.contentsOfDirectory(atPath: "/Volumes/")
 
@@ -414,6 +450,12 @@ concurrentQueue.async {
                                 }
                                 do{
                                     try FileManager.default.moveItem(atPath: oldFile, toPath: HDfolderPath)
+                                    
+                                    let numberOfItems = try FileManager.default.contentsOfDirectory(at: dirFolderPath, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles).count;
+                                    print("Number of images in folder: " + String(numberOfItems));
+                                    
+                                    myPeripheral.updateImageCount(count: numberOfItems);
+                                    
                                     if mute == 0{
                                         NSSound.beep()
                                     }
@@ -432,6 +474,12 @@ concurrentQueue.async {
                                 
                                 do{
                                     try FileManager.default.moveItem(atPath: oldFile, toPath: dirPath)
+                                    
+                                    let numberOfItems = try FileManager.default.contentsOfDirectory(at: dirFolderPath, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles).count;
+                                    print("Number of images in folder: " + String(numberOfItems));
+                                    
+                                    myPeripheral.updateImageCount(count: numberOfItems);
+                                    
                                     if mute == 0{
                                         NSSound.submarine?.stop()
                                         NSSound.submarine?.play()
@@ -440,6 +488,7 @@ concurrentQueue.async {
                                     
                                 } catch   {
                                     print("Move Mac error")
+                                    print("Unexpected error: \(error).")
                                 }
 
                             }

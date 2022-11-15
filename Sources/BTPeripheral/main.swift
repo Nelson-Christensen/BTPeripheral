@@ -328,7 +328,26 @@ let myPeripheral = Peripheral.init()
 
 let concurrentQueue = DispatchQueue(label: "swiftlee.concurrent.queue", attributes: .concurrent)
 
+func shell(_ command: String) -> String {
+    let task = Process()
+    let pipe = Pipe()
+    
+    task.standardOutput = pipe
+    task.standardError = pipe
+    task.arguments = ["-c", command]
+    task.executableURL = URL(fileURLWithPath: "/bin/zsh") //<--updated
+    task.standardInput = nil
+    task.launch()
+    
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    let output = String(data: data, encoding: .utf8)!
+    
+    print(output)
+    return output
+}
 
+// Example usage:
+shell("ls -la")
 
 concurrentQueue.async {
     // Perform the data request and JSON decoding on the background queue.

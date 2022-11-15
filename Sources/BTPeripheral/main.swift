@@ -394,6 +394,7 @@ concurrentQueue.async {
                         stringitem = item
                         stringitem.removeLast(4)
                         //print("Found items \(items.count)")
+                        var isJPG = false
                         
                         if item.contains(".ARW") || item.contains(".JPG") || item.contains(".raf") || item.contains(".RAF"){
                             //Date------ START
@@ -407,7 +408,7 @@ concurrentQueue.async {
                                 
                                 stringName.append(contentsOf: ".ARW")
                             } else if item.contains(".JPG"){
-                                
+                                isJPG = true
                                 stringName.append(contentsOf: ".JPG")
                             } else if item.contains(".raf"){
                                 
@@ -473,6 +474,10 @@ concurrentQueue.async {
                                 }
                                 
                                 do{
+                                    if (isJPG && iFindBlackFrames.isBlackFrame(filepath: oldFile, threshold: 0.02))
+                                    {
+                                        print("FOUND BLACKFRAME")
+                                    }
                                     try FileManager.default.moveItem(atPath: oldFile, toPath: dirPath)
                                     
                                     let numberOfItems = try FileManager.default.contentsOfDirectory(at: dirFolderPath, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions.skipsHiddenFiles).count;

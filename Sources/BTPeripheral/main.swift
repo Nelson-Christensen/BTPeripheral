@@ -9,10 +9,37 @@ import Foundation
 import CoreBluetooth
 import AppKit
 import PythonKit
+import AVFoundation
 
 PythonLibrary.useVersion(3)
 print("Python version ")
 print(Python.version)
+
+struct Speaker {
+
+    let synthesizer = AVSpeechSynthesizer()
+    func say(text :String) {
+        let utterance = AVSpeechUtterance(string: text)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
+        utterance.rate = 0.52
+        self.synthesizer.speak(utterance)
+    }
+}
+
+
+
+//synthesizer.speak(speech)
+let speaker = Speaker()
+//speaker.say(text:"Main started")
+
+let usbWatcher = UsbWatcher()
+
+DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+    if(!usbWatcher.IsConnected ())
+    {
+        speaker.say(text:"Connect Camera")
+    }
+}
 
 
 struct TransferService {
@@ -531,7 +558,6 @@ concurrentQueue.async {
         print("Task 1 started")
     }
 }
-
 
 RunLoop.main.run()
 

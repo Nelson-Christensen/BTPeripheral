@@ -22,6 +22,8 @@
 
 /* Begin PBXBuildFile section */
 		A05B507E292385CB006B5F4D /* iFindBlackframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05B507D292385CB006B5F4D /* iFindBlackframe.swift */; };
+		11598DD02923968700C4678D /* RemoteLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11598DCF2923968700C4678D /* RemoteLauncher.swift */; };
+		B849546A2922987E0069789A /* UsbWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84954692922987E0069789A /* UsbWatcher.swift */; };
 		OBJ_31 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* main.swift */; };
 		OBJ_33 /* PythonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "pythonkit::PythonKit::Product" /* PythonKit.framework */; };
 		OBJ_41 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
@@ -67,6 +69,8 @@
 
 /* Begin PBXFileReference section */
 		A05B507D292385CB006B5F4D /* iFindBlackframe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iFindBlackframe.swift; sourceTree = "<group>"; };
+		11598DCF2923968700C4678D /* RemoteLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLauncher.swift; sourceTree = "<group>"; };
+		B84954692922987E0069789A /* UsbWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsbWatcher.swift; sourceTree = "<group>"; };
 		D07349FE28007C0100D1990C /* BTPeripheral.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BTPeripheral.entitlements; sourceTree = "<group>"; };
 		D07349FF2800801200D1990C /* sendArduino.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = sendArduino.py; sourceTree = "<group>"; };
 		OBJ_12 /* BTPeripheralTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTPeripheralTests.swift; sourceTree = "<group>"; };
@@ -193,6 +197,8 @@
 				D07349FF2800801200D1990C /* sendArduino.py */,
 				OBJ_9 /* main.swift */,
 				A05B507D292385CB006B5F4D /* iFindBlackframe.swift */,
+				B84954692922987E0069789A /* UsbWatcher.swift */,
+				11598DCF2923968700C4678D /* RemoteLauncher.swift */,
 			);
 			name = BTPeripheral;
 			path = Sources/BTPeripheral;
@@ -317,7 +323,9 @@
 			buildActionMask = 0;
 			files = (
 				A05B507E292385CB006B5F4D /* iFindBlackframe.swift in Sources */,
+				11598DD02923968700C4678D /* RemoteLauncher.swift in Sources */,
 				OBJ_31 /* main.swift in Sources */,
+				B849546A2922987E0069789A /* UsbWatcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

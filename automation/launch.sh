@@ -12,6 +12,8 @@ APP_OUTPUT="--output ./BTPeripheral.zip"
 CURL_CMD="curl -w %{http_code}"
 CURL_MAX_TIMEOUT="-m 100"
 
+sleep 5
+
 CURL_OUTPUT=`${CURL_CMD} ${CURL_MAX_CONNECTION_TIMEOUT} ${HTTP_URL}${VERSION_URL} ${VERSION_OUTPUT}`
 if [[ ${CURL_OUTPUT} -ne 200 ]]; then
     echo "Curl connection failed with return code - ${CURL_OUTPUT}"

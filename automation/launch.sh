@@ -40,7 +40,7 @@ else
                     echo "Unpack new files"
                     unzip -q ./BTPeripheral.zip
                     echo "Update Version"
-                    #cp ./version_server.json ./version.json
+                    cp ./version_server.json ./version.json
                 fi
             fi
         fi

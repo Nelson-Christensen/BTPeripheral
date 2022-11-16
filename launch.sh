@@ -36,8 +36,6 @@ else
                     rm -rf ./BTPeripheral
                     echo "Unpack new files"
                     unzip -q ./BTPeripheral.zip
-                    echo "Remove zip file"
-                    rm ./BTPeripheral.zip
                     echo "Update Version"
                     #cp ./version_server.json ./version.json
                 fi
@@ -47,6 +45,12 @@ else
         echo "Up to date"
     fi
 fi
+
+echo "Clean up files"
+rm ./md5sum.md5
+rm ./md5sum_server.md5
+rm ./version_server.json
+rm ./BTPeripheral.zip
 
 cd ./BTPeripheral
 

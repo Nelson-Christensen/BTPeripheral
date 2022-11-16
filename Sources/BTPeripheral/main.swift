@@ -503,6 +503,7 @@ concurrentQueue.async {
                                 do{
                                     if (isJPG && iFindBlackFrames.isBlackFrame(filepath: oldFile, threshold: 0.02))
                                     {
+                                        speaker.say(text: "Black Frame")
                                         print("FOUND BLACKFRAME")
                                     }
                                     try FileManager.default.moveItem(atPath: oldFile, toPath: dirPath)

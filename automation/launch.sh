@@ -19,7 +19,9 @@ if [[ ${CURL_OUTPUT} -ne 200 ]]; then
     echo "Curl connection failed with return code - ${CURL_OUTPUT}"
 else
     echo "Curl connection success"
-    touch ./version.json
+    if [ ! -e ./version.json ]; then
+        echo "{}" >> ./version.json
+    fi
     if cmp ./version.json ./version_server.json | grep "differ"; then
         echo "New version available"
         CURL_OUTPUT=`${CURL_CMD} ${CURL_MAX_CONNECTION_TIMEOUT} ${HTTP_URL}${APP_URL} ${APP_OUTPUT}`

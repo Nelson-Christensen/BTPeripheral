@@ -28,7 +28,7 @@ func safeShell(_ command: String) throws -> String {
 func LaunchRemote()
 {
     do {
-        try safeShell("/usr/bin/automator ~/Documents/GitHub/Automater/StartRemote.app")
+        try safeShell("/usr/bin/automator ~/Documents/GitHub/StartRemote.app")
     }
     catch {
         print("\(error)") //handle or silence the error here
@@ -38,7 +38,7 @@ func LaunchRemote()
 func QuitRemote()
 {
     do {
-        try safeShell("/usr/bin/automator ~/Documents/GitHub/Automater/QuitRemote.app")
+        try safeShell("/usr/bin/automator ~/Documents/GitHub/QuitRemote.app")
     }
     catch {
         print("\(error)") //handle or silence the error here

@@ -2,24 +2,40 @@
 export PATH=/usr/local/bin:$PATH
 export PATH=$PATH:/bin
 
-curl www.creekside.se/download/mk3/version.json --output ./version_server.json
+HTTP_URL="www.creekside.se/download/mk3/"
+VERSION_URL="version.json"
+VERSION_OUTPUT="--output ./version_server.json"
+APP_URL="BTPeripheral.zip"
+APP_OUTPUT="--output ./BTPeripheral.zip"
+CURL_CMD="curl -w %{http_code}"
+CURL_MAX_TIMEOUT="-m 100"
 
-if cmp ./version.json ./version_server.json | grep "differ"; then
-    echo "New version available"
-    curl www.creekside.se/download/mk3/BTPeripheral.zip --output ./BTPeripheral.zip
-    echo "Remote old files"
-    rm -r ./BTPeripheral
-    echo "Unpack new files"
-    unzip -q ./BTPeripheral.zip
-    echo "Remove zip file"
-    rm ./BTPeripheral.zip
-    echo "Update Version"
-    cp ./version_server.json ./version.json
+CURL_OUTPUT=`${CURL_CMD} ${CURL_MAX_CONNECTION_TIMEOUT} ${HTTP_URL}${VERSION_URL} ${VERSION_OUTPUT}`
+if [[ ${CURL_OUTPUT} -ne 200 ]]; then
+    echo "Curl connection failed with return code - ${CURL_OUTPUT}"
 else
-    echo "Up to date"
+    echo "Curl connection success"
+    if cmp ./version.json ./version_server.json | grep "differ"; then
+        echo "New version available"
+        CURL_OUTPUT=`${CURL_CMD} ${CURL_MAX_CONNECTION_TIMEOUT} ${HTTP_URL}${APP_URL} ${APP_OUTPUT}`
+        if [[ ${CURL_OUTPUT} -ne 200 ]]; then
+            echo "Curl connection failed with return code - ${CURL_OUTPUT}"
+        else
+            echo "Remove old files"
+            rm -r ./mk3_macmini
+            echo "Unpack new files"
+            unzip -q ./mk3_macmini.zip
+            echo "Remove zip file"
+            rm ./mk3_macmini.zip
+            echo "Update Version"
+            #cp ./version_server.json ./version.json
+        fi
+    else
+        echo "Up to date"
+    fi
 fi
 
-cd ./BTPeripheral
+cd ./mk3_macmini
 
 echo waiting 1s before attempting to start
 sleep 1

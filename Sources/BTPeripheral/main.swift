@@ -8,12 +8,8 @@
 import Foundation
 import CoreBluetooth
 import AppKit
-import PythonKit
 import AVFoundation
 
-PythonLibrary.useVersion(3)
-print("Python version ")
-print(Python.version)
 
 struct Speaker {
 
@@ -95,19 +91,6 @@ public extension NSSound.Name {
     static let sosumi    = NSSound.Name("Sosumi")
     static let submarine = NSSound.Name("Submarine")
     static let tink      = NSSound.Name("Tink")
-}
-
-
-func runPythonCode(){
-    guard let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-        return
-    }
-    let folderPathPython = url.appendingPathComponent("Github").appendingPathComponent("BTPeripheral").appendingPathComponent("Sources").appendingPathComponent("BTPeripheral")
-    let sys = Python.import("sys")
-    sys.path.append(folderPathPython.path)
-    let example = Python.import("sendArduino")
-    let response = example.write(stringToWrite)
-    let str = String(response)
 }
 
 class Peripheral: NSObject, CBPeripheralManagerDelegate
@@ -362,7 +345,6 @@ class Peripheral: NSObject, CBPeripheralManagerDelegate
                 } else {
                     // Handle Remote Control Commands
                     stringToWrite = stringFromData
-                    runPythonCode()
                 }
                 peripheralManager.respond(to: aRequest, withResult: .success)
 

@@ -21,42 +21,21 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		A05B507E292385CB006B5F4D /* iFindBlackframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05B507D292385CB006B5F4D /* iFindBlackframe.swift */; };
 		11598DD02923968700C4678D /* RemoteLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11598DCF2923968700C4678D /* RemoteLauncher.swift */; };
+		A05B507E292385CB006B5F4D /* iFindBlackframe.swift in Sources */ = {isa = PBXBuildFile; fileRef = A05B507D292385CB006B5F4D /* iFindBlackframe.swift */; };
 		B849546A2922987E0069789A /* UsbWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84954692922987E0069789A /* UsbWatcher.swift */; };
 		OBJ_31 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* main.swift */; };
-		OBJ_33 /* PythonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "pythonkit::PythonKit::Product" /* PythonKit.framework */; };
 		OBJ_41 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_52 /* BTPeripheralTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* BTPeripheralTests.swift */; };
-		OBJ_54 /* PythonKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "pythonkit::PythonKit::Product" /* PythonKit.framework */; };
-		OBJ_61 /* NumpyConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* NumpyConversion.swift */; };
-		OBJ_62 /* Python.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* Python.swift */; };
-		OBJ_63 /* PythonLibrary+Symbols.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* PythonLibrary+Symbols.swift */; };
-		OBJ_64 /* PythonLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* PythonLibrary.swift */; };
-		OBJ_71 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* Package.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		D07349FA28007BF800D1990C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = OBJ_1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = "pythonkit::PythonKit";
-			remoteInfo = PythonKit;
-		};
 		D07349FB28007BF800D1990C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = "btperipheral::BTPeripheral";
 			remoteInfo = BTPeripheral;
-		};
-		D07349FC28007BF800D1990C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = OBJ_1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = "pythonkit::PythonKit";
-			remoteInfo = PythonKit;
 		};
 		D07349FD28007BF800D1990C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -68,23 +47,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		A05B507D292385CB006B5F4D /* iFindBlackframe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iFindBlackframe.swift; sourceTree = "<group>"; };
 		11598DCF2923968700C4678D /* RemoteLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLauncher.swift; sourceTree = "<group>"; };
+		A05B507D292385CB006B5F4D /* iFindBlackframe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iFindBlackframe.swift; sourceTree = "<group>"; };
 		B84954692922987E0069789A /* UsbWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsbWatcher.swift; sourceTree = "<group>"; };
 		D07349FE28007C0100D1990C /* BTPeripheral.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BTPeripheral.entitlements; sourceTree = "<group>"; };
-		D07349FF2800801200D1990C /* sendArduino.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = sendArduino.py; sourceTree = "<group>"; };
 		OBJ_12 /* BTPeripheralTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTPeripheralTests.swift; sourceTree = "<group>"; };
-		OBJ_16 /* NumpyConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumpyConversion.swift; sourceTree = "<group>"; };
-		OBJ_17 /* Python.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Python.swift; sourceTree = "<group>"; };
-		OBJ_18 /* PythonLibrary+Symbols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PythonLibrary+Symbols.swift"; sourceTree = "<group>"; };
-		OBJ_19 /* PythonLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PythonLibrary.swift; sourceTree = "<group>"; };
-		OBJ_20 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/mkiii-2/Documents/GitHub/BTPeripheral/.build/checkouts/PythonKit/Package.swift"; sourceTree = "<group>"; };
 		OBJ_25 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		"btperipheral::BTPeripheral::Product" /* BTPeripheral */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = BTPeripheral; sourceTree = BUILT_PRODUCTS_DIR; };
-		"btperipheral::BTPeripheralTests::Product" /* BTPeripheralTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = BTPeripheralTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		"pythonkit::PythonKit::Product" /* PythonKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PythonKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"btperipheral::BTPeripheralTests::Product" /* BTPeripheralTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = BTPeripheralTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,19 +64,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_33 /* PythonKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		OBJ_53 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 0;
-			files = (
-				OBJ_54 /* PythonKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		OBJ_65 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
@@ -131,41 +94,11 @@
 			path = Tests/BTPeripheralTests;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_13 /* Dependencies */ = {
-			isa = PBXGroup;
-			children = (
-				OBJ_14 /* PythonKit 0.2.2 */,
-			);
-			name = Dependencies;
-			sourceTree = "<group>";
-		};
-		OBJ_14 /* PythonKit 0.2.2 */ = {
-			isa = PBXGroup;
-			children = (
-				OBJ_15 /* PythonKit */,
-				OBJ_20 /* Package.swift */,
-			);
-			name = "PythonKit 0.2.2";
-			sourceTree = SOURCE_ROOT;
-		};
-		OBJ_15 /* PythonKit */ = {
-			isa = PBXGroup;
-			children = (
-				OBJ_16 /* NumpyConversion.swift */,
-				OBJ_17 /* Python.swift */,
-				OBJ_18 /* PythonLibrary+Symbols.swift */,
-				OBJ_19 /* PythonLibrary.swift */,
-			);
-			name = PythonKit;
-			path = .build/checkouts/PythonKit/PythonKit;
-			sourceTree = SOURCE_ROOT;
-		};
 		OBJ_21 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				"btperipheral::BTPeripheral::Product" /* BTPeripheral */,
 				"btperipheral::BTPeripheralTests::Product" /* BTPeripheralTests.xctest */,
-				"pythonkit::PythonKit::Product" /* PythonKit.framework */,
 			);
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -177,7 +110,6 @@
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
 				OBJ_10 /* Tests */,
-				OBJ_13 /* Dependencies */,
 				OBJ_21 /* Products */,
 				OBJ_25 /* README.md */,
 			);
@@ -194,7 +126,6 @@
 		OBJ_8 /* BTPeripheral */ = {
 			isa = PBXGroup;
 			children = (
-				D07349FF2800801200D1990C /* sendArduino.py */,
 				OBJ_9 /* main.swift */,
 				A05B507D292385CB006B5F4D /* iFindBlackframe.swift */,
 				B84954692922987E0069789A /* UsbWatcher.swift */,
@@ -217,7 +148,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				OBJ_34 /* PBXTargetDependency */,
 			);
 			name = BTPeripheral;
 			productName = BTPeripheral;
@@ -235,7 +165,6 @@
 			);
 			dependencies = (
 				OBJ_55 /* PBXTargetDependency */,
-				OBJ_56 /* PBXTargetDependency */,
 			);
 			name = BTPeripheralTests;
 			productName = BTPeripheralTests;
@@ -254,36 +183,6 @@
 			);
 			name = BTPeripheralPackageDescription;
 			productName = BTPeripheralPackageDescription;
-			productType = "com.apple.product-type.framework";
-		};
-		"pythonkit::PythonKit" /* PythonKit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_57 /* Build configuration list for PBXNativeTarget "PythonKit" */;
-			buildPhases = (
-				OBJ_60 /* Sources */,
-				OBJ_65 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = PythonKit;
-			productName = PythonKit;
-			productReference = "pythonkit::PythonKit::Product" /* PythonKit.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		"pythonkit::SwiftPMPackageDescription" /* PythonKitPackageDescription */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_67 /* Build configuration list for PBXNativeTarget "PythonKitPackageDescription" */;
-			buildPhases = (
-				OBJ_70 /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = PythonKitPackageDescription;
-			productName = PythonKitPackageDescription;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -311,8 +210,6 @@
 				"btperipheral::SwiftPMPackageDescription" /* BTPeripheralPackageDescription */,
 				"btperipheral::BTPeripheralPackageTests::ProductTarget" /* BTPeripheralPackageTests */,
 				"btperipheral::BTPeripheralTests" /* BTPeripheralTests */,
-				"pythonkit::PythonKit" /* PythonKit */,
-				"pythonkit::SwiftPMPackageDescription" /* PythonKitPackageDescription */,
 			);
 		};
 /* End PBXProject section */
@@ -345,33 +242,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_60 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 0;
-			files = (
-				OBJ_61 /* NumpyConversion.swift in Sources */,
-				OBJ_62 /* Python.swift in Sources */,
-				OBJ_63 /* PythonLibrary+Symbols.swift in Sources */,
-				OBJ_64 /* PythonLibrary.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		OBJ_70 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 0;
-			files = (
-				OBJ_71 /* Package.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		OBJ_34 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = "pythonkit::PythonKit" /* PythonKit */;
-			targetProxy = D07349FA28007BF800D1990C /* PBXContainerItemProxy */;
-		};
 		OBJ_46 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "btperipheral::BTPeripheralTests" /* BTPeripheralTests */;
@@ -381,11 +254,6 @@
 			isa = PBXTargetDependency;
 			target = "btperipheral::BTPeripheral" /* BTPeripheral */;
 			targetProxy = D07349FB28007BF800D1990C /* PBXContainerItemProxy */;
-		};
-		OBJ_56 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = "pythonkit::PythonKit" /* PythonKit */;
-			targetProxy = D07349FC28007BF800D1990C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -585,84 +453,6 @@
 			};
 			name = Release;
 		};
-		OBJ_58 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CURRENT_PROJECT_VERSION = 1;
-				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
-				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-				);
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = BTPeripheral.xcodeproj/PythonKit_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				OTHER_CFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = PythonKit;
-				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_VERSION = 5.0;
-				TARGET_NAME = PythonKit;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
-			};
-			name = Debug;
-		};
-		OBJ_59 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CURRENT_PROJECT_VERSION = 1;
-				DRIVERKIT_DEPLOYMENT_TARGET = 19.0;
-				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-				);
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = BTPeripheral.xcodeproj/PythonKit_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				OTHER_CFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = PythonKit;
-				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_VERSION = 5.0;
-				TARGET_NAME = PythonKit;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
-			};
-			name = Release;
-		};
-		OBJ_68 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				LD = /usr/bin/true;
-				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/ManifestAPI -sdk /Users/mkiii-2/Downloads/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -package-description-version 5.1.0";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		OBJ_69 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				LD = /usr/bin/true;
-				OTHER_SWIFT_FLAGS = "-swift-version 5 -I $(TOOLCHAIN_DIR)/usr/lib/swift/pm/ManifestAPI -sdk /Users/mkiii-2/Downloads/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -package-description-version 5.1.0";
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -707,24 +497,6 @@
 			buildConfigurations = (
 				OBJ_49 /* Debug */,
 				OBJ_50 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		OBJ_57 /* Build configuration list for PBXNativeTarget "PythonKit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				OBJ_58 /* Debug */,
-				OBJ_59 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		OBJ_67 /* Build configuration list for PBXNativeTarget "PythonKitPackageDescription" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				OBJ_68 /* Debug */,
-				OBJ_69 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
